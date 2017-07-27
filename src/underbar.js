@@ -259,27 +259,51 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+ 
     // TIP: There's a very clever way to re-use every() here.
-    if(iterator === undefined){
-      
-    }
+    if(iterator !== undefined){
 
-    if(Array.isArray(collection)){
-      for(var i = 0; i < collection.length; i++){
-        if(iterator(collection[i])){
-          return true;
+
+
+      if(Array.isArray(collection)){
+
+        for(var i = 0; i < collection.length; i++){
+          if(iterator(collection[i])){
+            return true;
+          }
         }
+
+      }else{
+
+        for(var key in collection){
+          if(iterator(collection[key])){
+            return true;
+          }
+        }
+
       }
+
+
+
+
     }else{
-      for(var key in collection){
-        if(iterator(collection[key])){
+
+
+      for(var i = 0; i < collection.length; i++){
+        if(collection[i]){
           return true;
         }
-      }
-    }
+      }  
 
+
+
+
+    }
+ 
     return false;
   };
+
+ 
 
 
   /**
@@ -295,12 +319,34 @@
   // Example:
   //   var obj1 = {key1: "something"};
   //   _.extend(obj1, {
-  //     key2: "something new",
+  //     key2: "something new", 
   //     key3: "something else new"
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {
+  _.extend = function(destination, source) { 
+ 
+   debugger
+
+  if(Object.keys(source).length === 0 && source.constructor === Object){
+    return destination;
+  }
+
+
+    //var source = { a: 'b' };
+    for(var key in source){
+      var aaa = key;
+   destination[key] = source[key]
+
+    }
+
+   
+
+  
+
+    return destination;
+
+
 
   };
 
