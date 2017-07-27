@@ -262,44 +262,26 @@
  
     // TIP: There's a very clever way to re-use every() here.
     if(iterator !== undefined){
-
-
-
       if(Array.isArray(collection)){
-
         for(var i = 0; i < collection.length; i++){
           if(iterator(collection[i])){
             return true;
           }
         }
-
       }else{
-
         for(var key in collection){
           if(iterator(collection[key])){
             return true;
           }
         }
-
       }
-
-
-
-
     }else{
-
-
       for(var i = 0; i < collection.length; i++){
         if(collection[i]){
           return true;
         }
       }  
-
-
-
-
     }
- 
     return false;
   };
 
@@ -324,35 +306,57 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(destination, source) { 
+  _.extend = function(obj, input, input2) { 
  
-   debugger
-
-  if(Object.keys(source).length === 0 && source.constructor === Object){
-    return destination;
-  }
-
-
-    //var source = { a: 'b' };
-    for(var key in source){
-      var aaa = key;
-   destination[key] = source[key]
-
+    if(Object.keys(input).length === 0 && input.constructor === Object){
+      return obj;
     }
-
-   
-
-  
-
-    return destination;
-
-
-
+    if(input2 === undefined){
+      for(var key in input){
+        obj[key] = input[key]
+      }
+    }else{
+      for(var key in input){
+        obj[key] = input[key]
+      }
+      for(var prop in input2){
+        obj[prop] = input2[prop]
+      }
+    }
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {
+  _.defaults = function(obj, input, input2, input3) {
+ 
+    if(Object.keys(input).length === 0 && input.constructor === Object){
+      return obj;
+    }
+    if(input2 === undefined){
+      for(var key in input){
+        if(obj[key] === undefined){
+          obj[key] = input[key]
+        }else{
+          key = obj[key]
+        }
+      }
+    }else{
+      for(var key in input){
+        obj[key] = input[key]
+      }
+      for(var keyA in input2){
+        if(obj[keyA] === undefined){
+          obj[keyA] = input2[keyA]
+        }else{
+          keyA = obj[keyA]
+        }
+      }
+      for(var keyB in input3){
+        obj[keyB] = input3[keyB]
+      }
+    }
+    return obj;   
   };
 
 
@@ -395,7 +399,21 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) {
+  _.memoize = function(func, hasher) {    
+    var memo = {};
+
+    hasher || (hasher = _.identity);
+    
+
+    return function() {
+      var key = hasher.apply(this, arguments);
+      //console.log('this is the key: ' + key)
+      if(typeof memo[key] === 'string'){
+        return memo[key]
+      }else{
+        return memo[key] = func.apply(this, arguments);
+      }
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -404,7 +422,14 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {
+  _.delay = function(func, wait, a, b) {
+
+    if(a === undefined && b === undefined){
+      return setTimeout(func, wait)
+    }else{
+      return setTimeout(func(a,b), wait)
+    }
+
   };
 
 
@@ -419,6 +444,19 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var newArray = array.slice(0, array.length);
+    var shuffled = [];
+
+    for(var i = 0; i < newArray.length; i++){
+      var randomNum = Math.floor(Math.random() * 10);
+      console.log(randomNum)
+      if(randomNum >= 5){
+        shuffled.push(newArray[i])
+      }else{
+        shuffled.unshift(newArray[i])
+      }
+    }
+    return shuffled
   };
 
 
